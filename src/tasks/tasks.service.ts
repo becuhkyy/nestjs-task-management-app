@@ -50,18 +50,22 @@ export class TasksService {
   createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.tasksRepository.createTask(createTaskDto);
   }
-  // deleteTask(id: string): void {
-  //   const existingTask = this.getTaskById(id);
-  //   //Sub-optimal, but if task not found in getTaskById()
-  //   //we throw the NotFound exception there and we don't have to repeat it here
-  //   //will be fixed when we introduce the ORM.
-  //   this.tasks = this.tasks.filter((task) => task.id !== existingTask.id);
-  // }
-  // updateTaskStatus(id: string, status: TaskStatus): Task {
-  //   const task = this.getTaskById(id);
-  //   //Bad, because we mutate the task
-  //   //Will be fixed when we introduce the ORM.
-  //   task.status = status;
-  //   return task;
-  // }
+
+  async deleteTask(id: string): Promise<void> {
+    const result = await this.tasksRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException();
+    }
+  }
+
+  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+
+    task.status = status;
+
+    await this.tasksRepository.save(task);
+
+    return task;
+  }
 }
