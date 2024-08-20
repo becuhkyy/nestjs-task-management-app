@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Task } from './tasks/task.entity';
 
 @Module({
   imports: [
@@ -13,6 +14,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: 'qi4CbEd6T09bJBfg',
       database: 'task-management',
       autoLoadEntities: true,
+      entities: [Task],
+      // Should not be set to true in production - it will drop all tables and recreate them
       synchronize: true,
     }),
   ],
