@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './tasks/task.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Task } from './tasks/task.entity';
       // Should not be set to true in production - it will drop all tables and recreate them
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],
