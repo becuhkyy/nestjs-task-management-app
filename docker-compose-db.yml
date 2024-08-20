@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      #RANDOM STRONG PASSWORD
+      POSTGRES_USER: task-management-user
+      POSTGRES_PASSWORD: qi4CbEd6T09bJBfg
+      POSTGRES_DB: task-management
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+#docker db volume
+/pgdata
+
 # Logs
 logs
 *.log

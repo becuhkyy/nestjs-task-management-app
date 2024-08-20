@@ -32,6 +32,12 @@
 $ yarn install
 ```
 
+## Running a PostgreSQL database with Docker
+
+```bash
+docker compose -f docker-compose-db.yml up -d
+```
+
 ## Running the app
 
 ```bash
