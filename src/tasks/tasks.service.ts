@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -38,7 +38,13 @@ export class TasksService {
   }
 
   getTaskById(id: string): Task {
-    return this.tasks.find((task) => task.id === id);
+    const task = this.tasks.find((task) => task.id === id);
+
+    if (!task) {
+      throw new NotFoundException();
+    }
+
+    return task;
   }
 
   createTask(createTaskDto: CreateTaskDto): Task {
@@ -57,14 +63,18 @@ export class TasksService {
   }
 
   deleteTask(id: string): void {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    const existingTask = this.getTaskById(id);
+    //Sub-optimal, but if task not found in getTaskById()
+    //we throw the NotFound exception there and we don't have to repeat it here
+    //will be fixed when we introduce the ORM.
+    this.tasks = this.tasks.filter((task) => task.id !== existingTask.id);
   }
 
   updateTaskStatus(id: string, status: TaskStatus): Task {
-    this.tasks = this.tasks.map((task) =>
-      task.id === id ? { ...task, status } : task,
-    );
-
-    return this.getTaskById(id);
+    const task = this.getTaskById(id);
+    //Bad, because we mutate the task
+    //Will be fixed when we introduce the ORM.
+    task.status = status;
+    return task;
   }
 }
